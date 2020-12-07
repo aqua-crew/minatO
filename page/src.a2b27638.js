@@ -8558,7 +8558,7 @@ exports.install = install;
 exports.mapState = exports.mapMutations = exports.mapGetters = exports.mapActions = exports.createNamespacedHelpers = exports.Store = exports.default = void 0;
 
 /*!
- * vuex v3.5.1
+ * vuex v3.6.0
  * (c) 2020 Evan You
  * @license MIT
  */
@@ -8853,7 +8853,12 @@ ModuleCollection.prototype.unregister = function unregister(path) {
 ModuleCollection.prototype.isRegistered = function isRegistered(path) {
   var parent = this.get(path.slice(0, -1));
   var key = path[path.length - 1];
-  return parent.hasChild(key);
+
+  if (parent) {
+    return parent.hasChild(key);
+  }
+
+  return false;
 };
 
 function update(path, targetModule, newModule) {
@@ -9898,7 +9903,7 @@ function pad(num, maxLength) {
 var index = {
   Store: Store,
   install: install,
-  version: '3.5.1',
+  version: '3.6.0',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
@@ -12025,7 +12030,6 @@ var actions = {
 
     return _index.default.createFile(placeholderFile.pid, placeholderFile, placeholderFile.mid).then(function (file) {
       context.dispatch('removePlaceholderFile');
-      console.warn('AddFile', file);
       context.commit('addFile', file);
     });
   },
@@ -20916,7 +20920,6 @@ function () {
       var coord = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var setPrimary = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       var modName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'Anchor';
-      console.warn('mods, modName', this.mods, modName);
       var Cursor = this.mods[modName];
       var cursor = new Cursor(this.aqua);
 
@@ -22480,37 +22483,7 @@ function () {
       }
 
       this[key] = fnOrProps;
-    } // extend(keyOrFunction, valueOrContext, isDefineProperty = false) {
-    // let key = keyOrFunction
-    // let value = valueOrContext
-    // if (!isDefineProperty) {
-    //     const fn = keyOrFunction
-    //     const context = valueOrContext
-    //     key = fn.name
-    //     value = fn.bind(context)
-    //     console.warn('key', key)
-    //     console.warn('value', value)
-    // }
-    // let key = ''
-    // if (typeof keyOrFunction === 'function') {
-    //     const fn = keyOrFunction
-    //     const fnNames = fn.name.split(' ') // 如果 fn 被 bind 过, 那么 fn.name = 'bound fn'
-    //     value = fn
-    //     key = fnNames[fnNames.length - 1]
-    //     console.warn('extend fn', value, key, fnNames)
-    // } else {
-    //     key = keyOrFunction
-    // }
-    // if (this[key]) {
-    //     Echo.error('Korwa.prototype.extend', `key ${key} exist`)
-    // }
-    // if (isDefineProperty) {
-    //     Object.defineProperty(this, key, value)
-    //     return
-    // }
-    // this[key] = value
-    // }
-
+    }
   }]);
 
   return Korwa;
@@ -30718,7 +30691,6 @@ var _default = {
         _this.handleInfo(info);
 
         if (_this.file.fid === curFid) {
-          console.warn('Set FileContent', info.content);
           _this.fileAndContent = info;
         }
       });
@@ -30759,7 +30731,6 @@ var _default = {
         return;
       }
 
-      console.warn('save');
       this.$store.dispatch('workspace/saveContent', info);
     },
     handleInfo: function handleInfo(info) {
@@ -31407,7 +31378,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "13401" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "14143" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
