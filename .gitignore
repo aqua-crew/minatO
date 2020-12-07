@@ -1,6 +1,13 @@
 # This
 .cache/
 dist/
+docs/
+src/
+static/
+.editorconfig
+.eslintrc.js
+index.html
+TODOLIST.md
 
 # Logs
 logs
