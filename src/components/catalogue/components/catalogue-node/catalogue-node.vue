@@ -118,6 +118,7 @@ export default {
     background-color: rgba($font-color, .7);
   }
   .inputer {
+    outline: 0;
     height: 100%;
     margin-left: 6px;
     color: rgba($aqua, 1);

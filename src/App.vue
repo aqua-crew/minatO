@@ -43,6 +43,7 @@ import Stage from '/src/components/stage/stage'
 import Activity from '/src/components/activity/activity'
 import ContextMenu from '/src/components/context-menu/context-menu'
 
+
 export default {
   data() {
     return {
@@ -53,6 +54,11 @@ export default {
     }
   },
   created() {
+    window.onbeforeunload = () => {
+      this.$khala.emit('pageUnload')
+
+      return 'Ayarin'
+    }
     this.login()
   },
   methods: {

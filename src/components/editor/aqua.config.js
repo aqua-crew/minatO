@@ -1,3 +1,5 @@
+const bg = require('./aqua-chan.png')
+
 export default {
   content: '',
 
@@ -30,7 +32,7 @@ export default {
 
   lifetimes: {
     setup(aqua) {
-      aqua.uiMgr.get('bgCntr').innerHTML = `<img id="aq" class="bg-image" src="${require('./aqua-chan.png')}" />`
+      aqua.uiMgr.get('bgCntr').innerHTML = `<img id="aq" class="bg-image" src="${bg}" />`
     },
     ready(aqua) {},
     destroyed() {},
