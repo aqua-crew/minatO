@@ -38,6 +38,14 @@ export default {
     onFold() {
       this.flexGrow_ = this.fold_ ? '0' : this.flexGrow
     },
+    fold() {
+      this.fold_ = true
+      this.flexGrow_ = '0'
+    },
+    unfold() {
+      this.fold_ = false
+      this.flexGrow_ = this.flexGrow
+    },
   },
 }
 </script>

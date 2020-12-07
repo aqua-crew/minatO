@@ -14,28 +14,28 @@ const state = () => {
 const getters = {}
 
 const mutations = {
-  setLayer(state, {
-    layer,
+  setModal(state, {
+    modal,
     value,
   }) {
-    state.modals[layer] = value
+    state.modals[modal] = value
   },
 }
 
 const actions = {
   open(context, {
-    layer,
+    modal,
     value,
   }) {
-    context.commit('setLayer', {
-      layer,
+    context.commit('setModal', {
+      modal,
       value,
     })
   },
 
-  close(context, layer) {
-    context.commit('setLayer', {
-      layer,
+  close(context, modal) {
+    context.commit('setModal', {
+      modal,
       value: null,
     })
   },

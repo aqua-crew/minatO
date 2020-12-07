@@ -14,11 +14,15 @@
         <file-filter
           name="Open Files"
         >
+          <template #menu>
+            <static-icon class="i-icon" :type="openedFiles.length + ''"></static-icon>
+          </template>
           <template #catalogue>
             <catalogue
               :catalogues="openedFiles"
               :active="file"
-              @select="onSelect"
+              @onSelect="onSelect"
+              @onContextMenu="onContextMenu"
             ></catalogue>
           </template>
         </file-filter>
@@ -26,20 +30,25 @@
         <file-filter
           name="Files"
           flexGrow="2"
+          ref="filesFilter"
         >
           <template #menu>
-            <icon class="i-icon" type="add" @click.native.stop="onCreateFile()"></icon>
+            <icon class="i-icon" type="addFile" @click.native.stop="onCreateFile()"></icon>
+            <icon class="i-icon" type="addFolder" @click.native.stop="onCreateFolder()"></icon>
           </template>
           <template #catalogue>
             <catalogue
               :catalogues="projectFiles"
               :active="file"
-              @select="onSelect"
+              @onSelect="onSelect"
+              @onContextMenu="onContextMenu"
             ></catalogue>
           </template>
         </file-filter>
       </div>
     </template>
+
+    <create-file-modal v-show="createFileModal" @onClose="onCreateFileModalClose"></create-file-modal>
   </div>
 </template>
 
@@ -48,15 +57,18 @@ import Searcher from '/src/components/searcher/searcher'
 import ProjectPlane from '/src/components/project-plane/project-plane'
 import Catalogue from '/src/components/catalogue/catalogue'
 import Icon from '/src/components/icon/icon'
+import StaticIcon from '/src/components/static-icon/static-icon'
 
+import CreateFileModal from './components/create-file-modal/create-file-modal'
 import FileFilter from './components/file-filter/file-filter'
 
 import Exceptions from '/src/exceptions/index'
 import Modals from '/src/Modals/index'
-import ContextMenu from '/src/components/context-menu/context-menu.js'
 
 import { FileEnum } from '/src/enums/index'
 import { FileHelper } from '/src/helpers/index'
+
+import { ContextMenuConfig } from '/src/configs/index'
 
 const DefaultPid = '-1'
 
@@ -71,6 +83,7 @@ export default {
   data() {
     return {
       requested: false,
+      isFilesFold: true,
     }
   },
   computed: {
@@ -93,7 +106,7 @@ export default {
       return this.$store.state.exceptions.codes[Exceptions.FileNameExist]
     },
     createFileModal() {
-      return this.$store.state.modals.layer
+      return this.$store.state.modals.modals[Modals.Workspace]
     }
   },
   watch:{
@@ -139,14 +152,47 @@ export default {
         return
       }
 
-      const type = parseInt(Math.random() * 2) === 0 ? FileEnum.FileType.Folder : FileEnum.FileType.File
-      this.$store.dispatch('workspace/createFileAsync', {
+      this.$refs.filesFilter.unfold()
+
+      this.$store.dispatch('modals/open', {
+        modal: Modals.Workspace,
+        value: {
+          mid,
+          pid,
+          type: FileEnum.FileType.File,
+        },
+      })
+
+      this.$store.dispatch('workspace/createPlaceholderFile', {
         pid,
         mid,
-        name: Math.random().toString(36).substring(4),
-        ext: type === 0 ? 'vue' : '',
-        type,
+        type: FileEnum.FileType.File,
       })
+    },
+    onCreateFolder(mid = '0', pid = this.pid) {
+      if (!pid) {
+        return
+      }
+
+      this.$refs.filesFilter.unfold()
+
+      this.$store.dispatch('modals/open', {
+        modal: Modals.Workspace,
+        value: {
+          mid,
+          pid,
+          type: FileEnum.FileType.Folder,
+        },
+      })
+
+      this.$store.dispatch('workspace/createPlaceholderFile', {
+        pid,
+        mid,
+        type: FileEnum.FileType.Folder,
+      })
+    },
+    onCreateFileModalClose() {
+      this.$store.dispatch('workspace/transformPlaceholderFileToFile')
     },
     onSelect(file) {
       if (FileHelper.isFolder(file)) {
@@ -157,15 +203,44 @@ export default {
 
       this.$store.dispatch('workspace/openFile', file)
     },
-    onContextMenu(event) {
+    onContextMenu(eventOrData) {
+      let position = null
+      let contextMenuType = ''
+      const payload = {
+        $store: this.$store,
+      }
+
+      if (eventOrData.file) {
+        position = {
+          top: eventOrData.y + 'px',
+          left: eventOrData.x + 'px'
+        }
+
+        contextMenuType = FileHelper.isFolder(eventOrData.file) ? 'folder' : 'file'
+        payload.pid = eventOrData.file.pid
+        payload.mid = eventOrData.file.fid
+        payload.file = eventOrData.file
+        payload.name = eventOrData.file.name + eventOrData.file.ext
+        payload.unfold = eventOrData.unfold
+      } else {
+        position = {
+          top: event.clientY + 'px',
+          left: event.clientX + 'px',
+        }
+
+        contextMenuType = 'folder'
+        payload.pid = this.pid
+        payload.mid = '0'
+        payload.unfold = () => {
+          this.$refs.filesFilter.unfold()
+        }
+      }
+
       this.$store.dispatch('modals/open', {
-        layer: Modals.ContextMenu,
+        modal: Modals.ContextMenu,
         value: {
-          menuList: ContextMenu.project,
-          position: {
-            top: event.clientY + 'px',
-            left: event.clientX + 'px',
-          },
+          menuList: ContextMenuConfig.get(contextMenuType, payload),
+          position,
         },
       })
     }
@@ -182,8 +257,10 @@ export default {
     ProjectPlane,
     Catalogue,
     Icon,
+    StaticIcon,
 
     FileFilter,
+    CreateFileModal,
   },
 }
 
@@ -216,6 +293,15 @@ export default {
     flex: 1;
     display: flex;
     flex-flow: column;
+    .i-icon {
+      display: inline-flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 4px;
+    }
+    .i-icon + .i-icon {
+      margin-left: 4px;
+    }
   }
 }
 </style>

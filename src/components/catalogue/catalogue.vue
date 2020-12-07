@@ -37,8 +37,11 @@ export default {
     this.khala = new Khala
   },
   created() {
-    this.khala.on('click', data => {
-      this.$emit('select', data)
+    this.khala.on('onClick', data => {
+      this.$emit('onSelect', data)
+    })
+    this.khala.on('onContextMenu', data => {
+      this.$emit('onContextMenu', data)
     })
   },
   beforeDestroy() {

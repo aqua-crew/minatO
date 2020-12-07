@@ -3,6 +3,7 @@
     :isFold="isIconFold"
     :flexGrow="flexGrow"
     @onChange="onChange"
+    ref="folder"
   >
     <template #header>
       <div class="filter filter-files">
@@ -58,7 +59,15 @@ export default {
     },
     onChange(isFold) {
       this.isIconFold = isFold
-    }
+    },
+    fold() {
+      this.isIconFold = true
+      this.$refs.folder.fold()
+    },
+    unfold() {
+      this.isIconFold = false
+      this.$refs.folder.unfold()
+    },
   },
   components: {
     Folder,
@@ -81,7 +90,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
+    height: 30px;
     color: rgba($white, .6);
     font-weight: bold;
     border-top: 1px solid $side-bar-color;
@@ -89,6 +98,7 @@ export default {
     .left {
       display: flex;
       align-items: center;
+      padding-left: 8px;
       .icon {
         // transform: rotate(0);
         border-left: 6px solid rgba($white, .6);
@@ -103,6 +113,7 @@ export default {
     .right {
       display: flex;
       align-items: center;
+      height: 100%;
     }
   }
   .filter-files {

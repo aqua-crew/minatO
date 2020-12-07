@@ -31,7 +31,7 @@
       ></activity>
     </div>
     <div class="footer">
-
+      <!-- Clock < -->
     </div>
   </div>
 </template>

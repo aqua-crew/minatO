@@ -101,9 +101,7 @@ export default {
         justify-content: center;
         align-items: center;
         height: 100%;
-        width: 27px;
-        color: rgba($white, 1);
-        background-color: rgba($button-color, .6);
+        padding: 0 6px;
       }
     }
   }

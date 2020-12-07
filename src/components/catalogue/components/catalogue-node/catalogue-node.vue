@@ -1,25 +1,35 @@
 <template>
-  <div class="catalogue-node"
-    v-if="isDelete === '0'"
-    @click.stop="onClick"
-    @click.right.prevent.stop="onContextMenu"
-  >
-    <source-item
-      class="i-source-item"
-      :class="{ active: active && active.fid === data.fid, 'icon-active': isFold === '0' }"
-      :icon="data.icon"
-      :name="data.name + (data.ext ? '.' + data.ext : '')"
-      :type="data.type"
-    ></source-item>
+  <div class="root">
+    <template v-if="data.fid === '-1'">
+      <div class="placeholder-file">
+        <div class="icon"></div>
+        <input class="inputer" type="text" v-model="fileFullName" ref="inputer">
+      </div>
+    </template>
+    <template v-else>
+      <div class="catalogue-node"
+        v-if="isDelete === '0'"
+        @click.stop="onClick"
+        @click.right.prevent.stop="onContextMenu"
+      >
+        <source-item
+          class="i-source-item"
+          :class="{ active: active && active.fid === data.fid, 'icon-active': data.status.isFold === '0' }"
+          :icon="data.icon"
+          :name="data.name + (data.ext ? '.' + data.ext : '')"
+          :type="data.type"
+        ></source-item>
 
-    <template v-if="files && files.length > 0">
-      <div class="content" v-show="isFold === '0'">
-        <catalogue-node
-          v-for="child in files"
-          :key="child.fid"
-          :data="child"
-          :active="active"
-        ></catalogue-node>
+        <template v-if="files && files.length > 0">
+          <div class="content" v-show="data.status.isFold === '0'">
+            <catalogue-node
+              v-for="child in files"
+              :key="child.fid"
+              :data="child"
+              :active="active"
+            ></catalogue-node>
+          </div>
+        </template>
       </div>
     </template>
   </div>
@@ -29,7 +39,6 @@
 import SourceItem from '/src/components/source-item/source-item'
 
 import Modals from '/src/Modals/index'
-import ContextMenu from '/src/components/context-menu/context-menu.js'
 
 import { FileEnum } from '/src/enums/index'
 import { FileHelper } from '/src/helpers/index'
@@ -43,10 +52,12 @@ export default {
     data: Object,
     active: Object,
   },
+  data() {
+    return {
+      fileFullName: '',
+    }
+  },
   computed: {
-    isFold() {
-      return this.data.status.isFold
-    },
     isDelete() {
       return this.data.status.isDelete
     },
@@ -61,57 +72,27 @@ export default {
       }
     }
   },
+  mounted() {
+    if (FileHelper.isPlaceholder(this.data)) {
+      this.$refs.inputer.focus()
+    }
+  },
+  watch: {
+    fileFullName(fullName) {
+      this.$store.dispatch('workspace/setPlaceholderFileInfo', FileHelper.getNameAndExt(fullName))
+    }
+  },
   methods: {
     onClick() {
-      this.khala.emit('click', this.data)
+      this.khala.emit('onClick', this.data)
     },
     onContextMenu(event) {
-      let menuList = [{
-        name: this.data.name,
-      }]
-
-      if (FileHelper.isFolder(this.data)) {
-        menuList.push({
-          name: 'Create File',
-          fn: () => {
-            this.$store.dispatch('workspace/createFileAsync', {
-              pid: this.data.pid,
-              mid: this.data.fid,
-              name: Math.random().toString(36).substring(4),
-              ext: 'vue',
-              type: FileEnum.FileType.File,
-            })
-          },
-        }, {
-          name: 'Create Folder',
-          fn: () => {
-            this.$store.dispatch('workspace/createFileAsync', {
-              pid: this.data.pid,
-              mid: this.data.fid,
-              name: Math.random().toString(36).substring(4),
-              ext: '',
-              type: FileEnum.FileType.Folder,
-            })
-          },
-        })
-      }
-
-      menuList.push({
-        name: 'Delete',
-        fn: () => {
-          console.warn('Delete file', this.data)
-          this.$store.dispatch('workspace/removeFileAsync', this.data)
-        }
-      })
-
-      this.$store.dispatch('modals/open', {
-        layer: Modals.ContextMenu,
-        value: {
-          menuList,
-          position: {
-            top: event.clientY + 'px',
-            left: event.clientX + 'px',
-          },
+      this.khala.emit('onContextMenu', {
+        y: event.clientY,
+        x: event.clientX,
+        file: this.data,
+        unfold: () => {
+          this.$store.dispatch('workspace/unfoldFile', this.data)
         },
       })
     }
@@ -125,6 +106,24 @@ export default {
 <style lang="scss">
 @import '/src/styles/colors';
 
+.placeholder-file {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  .icon {
+    width: 6px;
+    height: 6px;
+    background-color: rgba($font-color, .7);
+  }
+  .inputer {
+    height: 100%;
+    margin-left: 6px;
+    color: rgba($aqua, 1);
+    background-color: rgba($aqua, 0);
+  }
+}
 .catalogue-node {
   position: relative;
   .size {

@@ -5,9 +5,7 @@
       <span>{{ title }}</span>
     </div>
     <div class="right" @click.stop="close">
-      <icon
-        type="close"
-      ></icon>
+      <icon class="i-icon" type="close"></icon>
     </div>
   </div>
 </template>
@@ -74,7 +72,10 @@ export default {
     box-sizing: border-box;
     height: 100%;
     margin-left: 24px;
-    padding-right: 12px;
+    .i-icon {
+      height: 100%;
+      padding: 0 6px;
+    }
   }
 }
 </style>

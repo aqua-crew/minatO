@@ -4,6 +4,7 @@ const state = () => ({
   project: null,
   file: null,
   openedFiles: [],
+  placeholderFile: null,
 })
 
 const getters = {
@@ -69,7 +70,22 @@ const mutations = {
   },
   unfoldFile(state, file) {
     file.status.isFold = '0'
-  }
+  },
+  setPlaceholderFile(state, file) {
+    state.placeholderFile = file
+  },
+  removePlaceholderFile(state) {
+    const file = state.placeholderFile
+    const files = state.project.files
+
+    files.splice(files.findIndex(f => f.fid === file.fid), 1)
+  },
+  setPlaceholderFileInfo(state, file) {
+    state.placeholderFile = {
+      ...state.placeholderFile,
+      ...file,
+    }
+  },
 }
 
 const actions = {
@@ -135,6 +151,42 @@ const actions = {
       context.commit('setFile', context.getters.lastOpenedFile)
     }
   },
+  getPlaceholderFile(context) {
+    return context.state.placeholderFile
+  },
+  createPlaceholderFile(context, file) {
+    file = {
+      fid: '-1',
+      name: '',
+      ext: '',
+      ...file,
+    }
+
+    context.commit('addFile', file)
+    context.commit('setPlaceholderFile', file)
+  },
+  removePlaceholderFile(context) {
+    context.commit('removePlaceholderFile')
+    context.commit('setPlaceholderFile', null)
+  },
+  setPlaceholderFileInfo(context, file) {
+    context.commit('setPlaceholderFileInfo', file)
+  },
+  transformPlaceholderFileToFile(context) {
+    const placeholderFile = context.state.placeholderFile
+
+    if (placeholderFile.name.length === 0) {
+      context.dispatch('removePlaceholderFile')
+
+      return
+    }
+
+    return api.createFile(placeholderFile.pid, placeholderFile, placeholderFile.mid).then(file => {
+      context.dispatch('removePlaceholderFile')
+      console.warn('AddFile', file)
+      context.commit('addFile', file)
+    })
+  },
   getContent(context, file) {
     return api.getContent(file.cid)
   },
@@ -143,7 +195,13 @@ const actions = {
   },
   toggleFold(context, file) {
     file.status.isFold === '1' ? context.commit('unfoldFile', file) : context.commit('foldFile', file)
-  }
+  },
+  unfoldFile(context, file) {
+    context.commit('unfoldFile', file)
+  },
+  foldFile(context, file) {
+    context.commit('foldFile', file)
+  },
 }
 
 export default {

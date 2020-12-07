@@ -1,5 +1,4 @@
 <template>
-  <!-- <img class="icon" :src="src" :alt="alt"> -->
   <div class="icon">{{ src }}</div>
 </template>
 
@@ -35,8 +34,5 @@ export default {
   background-color: rgba($button-color, .25);
   color: rgba($white, 1);
   transition: all .25s ease;
-  &:hover {
-    background-color: rgba($button-color, .7);
-  }
 }
 </style>

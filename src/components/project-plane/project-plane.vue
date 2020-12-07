@@ -12,7 +12,6 @@
 
 <script>
 import Modals from '/src/Modals/index'
-import ContextMenu from '/src/components/context-menu/context-menu.js'
 
 export default {
   name: 'project-plane',
@@ -21,16 +20,16 @@ export default {
   },
   methods: {
     onContextMenu(event) {
-      this.$store.dispatch('modals/open', {
-        layer: Modals.ContextMenu,
-        value: {
-          menuList: ContextMenu.project,
-          position: {
-            top: event.clientY + 'px',
-            left: event.clientX + 'px',
-          },
-        },
-      })
+      // this.$store.dispatch('modals/open', {
+      //   layer: Modals.ContextMenu,
+      //   value: {
+      //     menuList: ContextMenu.project,
+      //     position: {
+      //       top: event.clientY + 'px',
+      //       left: event.clientX + 'px',
+      //     },
+      //   },
+      // })
     }
   },
 }
