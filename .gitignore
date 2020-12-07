@@ -1,6 +1,7 @@
 # This
 .cache/
 dist/
+page/
 
 # Logs
 logs
