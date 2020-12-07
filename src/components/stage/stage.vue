@@ -68,7 +68,6 @@ export default {
       this.$store.dispatch('workspace/getContent', file).then(info => {
         this.handleInfo(info)
         if (this.file.fid === curFid) {
-          console.warn('Set FileContent', info.content)
           this.fileAndContent = info
         }
       })
@@ -108,8 +107,6 @@ export default {
       if (!info) {
         return
       }
-
-      console.warn('save')
 
       this.$store.dispatch('workspace/saveContent', info)
     },

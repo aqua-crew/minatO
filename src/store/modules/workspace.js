@@ -183,7 +183,6 @@ const actions = {
 
     return api.createFile(placeholderFile.pid, placeholderFile, placeholderFile.mid).then(file => {
       context.dispatch('removePlaceholderFile')
-      console.warn('AddFile', file)
       context.commit('addFile', file)
     })
   },
