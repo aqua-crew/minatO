@@ -74,6 +74,18 @@ export default {
       })
     }
   },
+  created() {
+    this['customHook:pageUnload'] = () => {
+      if (this.openedFiles.length > 0) {
+        this.saveContent()
+      }
+    }
+
+    this.$khala.on('pageUnload', this['customHook:pageUnload'])
+  },
+  beforeDestroy() {
+    this.khala.off('pageUnload', this['customHook:pageUnload'])
+  },
   methods: {
     onChange(file) {
       if (file.fid === this.file.fid) {
@@ -83,6 +95,7 @@ export default {
       this.$store.dispatch('workspace/openFile', file)
     },
     onClose(file) {
+      this.saveContent()
       this.$store.dispatch('workspace/closeFile', file)
     },
     onDocChange() {
@@ -95,6 +108,8 @@ export default {
       if (!info) {
         return
       }
+
+      console.warn('save')
 
       this.$store.dispatch('workspace/saveContent', info)
     },
