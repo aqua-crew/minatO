@@ -2,7 +2,6 @@ import { FileEnum } from '/src/enums/index'
 
 export default {
   isFolder(file) {
-
     return file.type === FileEnum.FileType.Folder
   },
 
@@ -38,7 +37,7 @@ export default {
   },
 
   getFullName(file) {
-    return file.name + '.' + file.ext
+    return file.ext ? file.name + '.' + file.ext : file.name
   },
 
   getNameAndExt(fullName) {

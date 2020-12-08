@@ -17,19 +17,11 @@ import ProjectPlane from '/src/components/project-plane/project-plane'
 
 export default {
   name: 'user-space',
-
-  data() {
-    return {
-
-    }
-  },
-
   computed: {
     project() {
       return this.$store.state.workspace.project
     }
   },
-
   components: {
     StaticIcon,
     ProjectPlane,
