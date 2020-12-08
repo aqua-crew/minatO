@@ -2,6 +2,7 @@
 .cache/
 dist/
 page/
+build/
 
 # Logs
 logs
