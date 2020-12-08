@@ -8,8 +8,7 @@
   },
   "scripts": {
     "serve": "parcel ./index.html --open",
-    "build": "parcel build ./index.html --out-dir build/ --public-url ./",
-    "page": "parcel ./index.html --out-dir page/ --public-url ./"
+    "build": "parcel build ./index.html --out-dir build/ --public-url ./ --no-source-maps --no-cache",
   },
   "author": "ayarin",
   "license": "MIT",
