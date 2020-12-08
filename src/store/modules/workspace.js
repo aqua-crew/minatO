@@ -11,6 +11,7 @@ const getters = {
   openedFilesOrderDesc(state) {
     return state.openedFiles.slice().sort((a, b) => {b.openedTime - a.openedTime})
   },
+
   lastOpenedFile(state, getters) {
     const files = getters.openedFilesOrderDesc
 
@@ -28,15 +29,19 @@ const mutations = {
     state.file = workspace.file
     state.openedFiles = workspace.openedFiles
   },
+
   setProject(state, project) {
     state.project = project
   },
+
   setFile(state, file) {
     state.file = file
   },
+
   setOpenedFiles(state, openedFiles) {
     state.setOpenedFiles = openedFiles
   },
+
   addOpenedFile(state, file, toIndex = Infinity) {
     const isExist = state.openedFiles.find(openedFile => openedFile.fid === file.fid)
 
@@ -46,6 +51,7 @@ const mutations = {
 
     state.openedFiles.splice(toIndex, 0, file)
   },
+
   removeOpenedFile(state, file) {
     const index = state.openedFiles.findIndex(openedFile => openedFile.fid === file.fid)
 
@@ -55,31 +61,38 @@ const mutations = {
 
     state.openedFiles.splice(index, 1)
   },
+
   addFile(state, file) {
     const files = state.project.files
 
     files.push(file)
   },
+
   removeFile(state, file) {
     const files = state.project.files
 
     files.find(f => f.fid === file.fid).status.isDelete = '1'
   },
+
   foldFile(state, file) {
     file.status.isFold = '1'
   },
+
   unfoldFile(state, file) {
     file.status.isFold = '0'
   },
+
   setPlaceholderFile(state, file) {
     state.placeholderFile = file
   },
+
   removePlaceholderFile(state) {
     const file = state.placeholderFile
     const files = state.project.files
 
     files.splice(files.findIndex(f => f.fid === file.fid), 1)
   },
+
   setPlaceholderFileInfo(state, file) {
     state.placeholderFile = {
       ...state.placeholderFile,
@@ -90,11 +103,13 @@ const mutations = {
 
 const actions = {
   requestWorkspace(context, uid) {
-    return api.getWorkspace(uid)
+    return api.getWorkspace(uid).then(workspace => {
+      context.dispatch('initWorkspace', workspace)
+
+      return workspace
+    })
   },
-  requestContent(context, cid) {
-    return api.getContent(cid)
-  },
+
   createWorkspaceAsync(context, pid) {
     return api.getProject(pid).then(project => {
       return context.dispatch('initWorkspace', {
@@ -102,17 +117,7 @@ const actions = {
       })
     })
   },
-  createFileAsync(context, file) {
-    return api.createFile(file.pid, file, file.mid).then(file => {
-      context.commit('addFile', file)
-    })
-  },
-  removeFileAsync(context, file) {
-    return api.removeFile(file.pid, file.fid).then(() => {
-      context.commit('removeOpenedFile', file)
-      context.commit('removeFile', file)
-    })
-  },
+
   saveWorkspace({ state }, uid) {
     return api.setWorkspace(uid, {
       pid: state.project ? state.project.pid : '-1',
@@ -120,6 +125,7 @@ const actions = {
       openedFilesId: state.openedFiles ? state.openedFiles.map(file => file.fid) : [],
     })
   },
+
   initWorkspace(context, workspace) {
     workspace = {
       project: null,
@@ -130,6 +136,20 @@ const actions = {
 
     context.commit('setWorkspace', workspace)
   },
+
+  createFileAsync(context, file) {
+    return api.createFile(file.pid, file, file.mid).then(file => {
+      context.commit('addFile', file)
+    })
+  },
+
+  removeFileAsync(context, file) {
+    return api.removeFile(file.pid, file.fid).then(() => {
+      context.commit('removeOpenedFile', file)
+      context.commit('removeFile', file)
+    })
+  },
+
   openFile(context, file) {
     const NotUpdate = false
     const openedTime = new Date().getTime()
@@ -144,6 +164,7 @@ const actions = {
     context.commit('setFile', file)
     context.commit('addOpenedFile', file)
   },
+
   closeFile(context, file) {
     context.commit('removeOpenedFile', file)
 
@@ -151,9 +172,11 @@ const actions = {
       context.commit('setFile', context.getters.lastOpenedFile)
     }
   },
+
   getPlaceholderFile(context) {
     return context.state.placeholderFile
   },
+
   createPlaceholderFile(context, file) {
     file = {
       fid: '-1',
@@ -165,13 +188,16 @@ const actions = {
     context.commit('addFile', file)
     context.commit('setPlaceholderFile', file)
   },
+
   removePlaceholderFile(context) {
     context.commit('removePlaceholderFile')
     context.commit('setPlaceholderFile', null)
   },
+
   setPlaceholderFileInfo(context, file) {
     context.commit('setPlaceholderFileInfo', file)
   },
+
   transformPlaceholderFileToFile(context) {
     const placeholderFile = context.state.placeholderFile
 
@@ -186,18 +212,27 @@ const actions = {
       context.commit('addFile', file)
     })
   },
+
+  requestContent(context, cid) {
+    return api.getContent(cid)
+  },
+
   getContent(context, file) {
     return api.getContent(file.cid)
   },
+
   saveContent(context, file) {
     return api.setContent(file.cid, file.content)
   },
+
   toggleFold(context, file) {
     file.status.isFold === '1' ? context.commit('unfoldFile', file) : context.commit('foldFile', file)
   },
+
   unfoldFile(context, file) {
     context.commit('unfoldFile', file)
   },
+
   foldFile(context, file) {
     context.commit('foldFile', file)
   },

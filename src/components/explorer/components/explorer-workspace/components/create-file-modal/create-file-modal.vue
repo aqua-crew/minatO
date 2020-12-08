@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '/src/styles/colors';
+@import '/static/components-styles/colors';
 
 .create-file-modal {
   position: absolute;

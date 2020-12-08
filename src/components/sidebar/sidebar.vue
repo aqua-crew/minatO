@@ -3,6 +3,7 @@
     <div class="upper-part">
       <menu-item
         v-for="menuItem in menuItems"
+        class="i-menu-item"
         :class="currentName === menuItem.name ? 'active' : ''"
         :data="menuItem"
         :key="menuItem.name"
@@ -93,6 +94,10 @@ export default {
     flex-flow: column;
     align-items: center;
     width: 100%;
+    .i-menu-item.active {
+      background-color: rgba($aqua, .8);
+      color: rgba($white, 1) !important;
+    }
   }
   .lower-part {
     display: flex;

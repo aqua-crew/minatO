@@ -59,6 +59,9 @@ export default {
 
       return 'Ayarin'
     }
+
+    this.$global.enterTime = new Date().getTime()
+
     this.login()
   },
   methods: {
@@ -90,7 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './styles/colors';
+@import '/static/components-styles/colors';
 
 .minato {
   position: relative;

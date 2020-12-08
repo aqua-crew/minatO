@@ -28,12 +28,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '/src/styles/colors';
+@import '/static/components-styles/colors';
 
 .menu-item {
   position: relative;
   width: 100%;
   padding-top: 100%;
+  font-size: 10px;
+  font-family: Consolas;
+  color: rgba($font-color, .8);
   cursor: pointer;
   user-select: none;
   .wrap {
@@ -54,8 +57,5 @@ export default {
 
 /* Temp */
 .placeholder {
-  font-size: 10px;
-  font-family: Consolas;
-  color: rgba($font-color, .8);;
 }
 </style>

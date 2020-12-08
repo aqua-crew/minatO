@@ -69,6 +69,7 @@ export default {
 
 <style lang="scss">
 @import './aqua.scss';
+@import '/static/components-styles/colors';
 
 .editor {
   height: 100%;

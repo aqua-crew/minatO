@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '/src/styles/colors';
+@import '/static/components-styles/colors';
 
 .activity {
   flex: 0 0 300px;

@@ -14,6 +14,14 @@ export default {
     return fileA.fid === fileB.fid && fileA.pid === fileB.pid
   },
 
+  isDelete(file) {
+    return file.status.isDelete === '1'
+  },
+
+  isPlaceholder(file) {
+    return file.fid === '-1'
+  },
+
   sort(f) {
     const folders = []
     const files = []
@@ -29,28 +37,25 @@ export default {
     return file.mid === '0'
   },
 
-  isDelete(file) {
-    return file.status.isDelete === '1'
-  },
-
-  isPlaceholder(file) {
-    return file.fid === '-1'
+  getFullName(file) {
+    return file.name + '.' + file.ext
   },
 
   getNameAndExt(fullName) {
-    fullName = fullName.split('.')
+    const fullNameArr = fullName.split('.')
 
     let name = ''
     let ext = ''
 
-    if (fullName.length === 1) {
-      name = fullName[0]
+    const len = fullNameArr.length
+    if (len === 1) {
+      name = fullNameArr[0]
     } else {
-      if (fullName[0].length === 0) {
-        name = '.' + fullName[1]
+      if (fullNameArr[0].length === 0) {
+        name = '.' + fullNameArr[1]
       } else {
-        name = fullName[0]
-        ext = fullName[1]
+        ext = fullNameArr[len - 1]
+        name = fullName.substring(0, fullName.length - ext.length - 1)
       }
     }
 

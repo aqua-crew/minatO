@@ -116,10 +116,10 @@ const server = {
         }
 
         return Promise.all([
-          workspace.project ? server.project.get(workspace.project.pid) : Promise.resolve(null),
-          workspace.file ? server.file.get(workspace.fid) : Promise.resolve(null),
+          workspace.pid !== '-1' ? server.project.get(workspace.pid) : Promise.resolve(null),
+          workspace.fid !== '-1' ? server.file.get(workspace.pid, workspace.fid) : Promise.resolve(null),
         ]).then(([project, file]) => {
-          return Promise.all(workspace.openedFilesId.map(fid => server.file.get(pid, fid)))
+          return Promise.all(workspace.openedFilesId.map(fid => server.file.get(project.pid, fid)))
             .then(openedFiles => {
               return makeImmutable({
                 project,

@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '/src/styles/colors';
+@import '/static/components-styles/colors';
 
 .tabs {
   flex: 0 0 36px;

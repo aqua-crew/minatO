@@ -54,4 +54,6 @@ export default {
 </script>
 
 <style lang="scss">
+@import '/static/components-styles/colors';
+
 </style>

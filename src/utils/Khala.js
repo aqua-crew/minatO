@@ -27,7 +27,7 @@ class Khala {
 
         for (let i = 0; i < cbs.length; i++) {
             if (cbs[i] === fn) {
-                cbs.splice(i, i)
+                cbs.splice(i, 1)
                 break
             }
         }

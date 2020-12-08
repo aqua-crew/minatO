@@ -23,10 +23,17 @@ const mutations = {
 }
 
 const actions = {
-  open(context, {
-    modal,
-    value,
-  }) {
+  open(context, modalOrOption) {
+    let modal = ''
+    let value = true
+
+    if (typeof modalOrOption === 'string') {
+      modal = modalOrOption
+    } else {
+      modal = modalOrOption.modal
+      value = modalOrOption.value !== undefined ? modalOrOption.value : true
+    }
+
     context.commit('setModal', {
       modal,
       value,

@@ -1,4 +1,5 @@
 import { FileEnum } from '/src/enums/index'
+import { FileHelper } from '/src/helpers/index'
 import Modals from '/src/Modals/index'
 
 const contextmenu = {
@@ -10,9 +11,11 @@ const contextmenu = {
     const $store = payload.$store
     const file = payload.file
 
+    console.warn('file', file)
+
     return [
       {
-        name: payload.name,
+        name: FileHelper.getFullName(file),
       },
       {
         name: 'Delete',
@@ -26,8 +29,7 @@ const contextmenu = {
   folder(payload) {
     const $store = payload.$store
     const unfold = payload.unfold
-    const pid = payload.pid
-    const mid = payload.mid
+    const file = payload.file
 
     const menuList = [
       {
@@ -35,20 +37,18 @@ const contextmenu = {
         fn() {
           unfold()
 
-          $store.dispatch('modals/open', {
-            modal: Modals.Workspace,
-            value: {
-              mid,
-              pid,
-              type: FileEnum.FileType.File,
-            },
-          })
-
+          $store.dispatch('modals/open', Modals.Workspace)
           $store.dispatch('workspace/createPlaceholderFile', {
-            pid,
-            mid,
+            pid: file.pid,
+            mid: file.fid,
             type: FileEnum.FileType.File,
           })
+        },
+      },
+      {
+        name: 'Test',
+        fn() {
+
         },
       },
       {
@@ -56,35 +56,27 @@ const contextmenu = {
         fn() {
           unfold()
 
-          $store.dispatch('modals/open', {
-            modal: Modals.Workspace,
-            value: {
-              mid,
-              pid,
-              type: FileEnum.FileType.Folder,
-            },
-          })
-
+          $store.dispatch('modals/open', Modals.Workspace)
           $store.dispatch('workspace/createPlaceholderFile', {
-            pid,
-            mid,
+            pid: file.pid,
+            mid: file.fid,
             type: FileEnum.FileType.Folder,
           })
         },
       },
     ]
 
-    if (payload.name) {
+    if (!payload.noName) {
       menuList.unshift({
-        name: payload.name
+        name: FileHelper.getFullName(file),
       })
     }
 
-    if (payload.file) {
+    if (!payload.noDelete) {
       menuList.push({
         name: 'Delete',
         fn() {
-          $store.dispatch('workspace/removeFileAsync', payload.file)
+          $store.dispatch('workspace/removeFileAsync', file)
         },
       })
     }

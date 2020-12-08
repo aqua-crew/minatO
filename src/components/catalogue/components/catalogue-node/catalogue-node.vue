@@ -3,7 +3,16 @@
     <template v-if="data.fid === '-1'">
       <div class="placeholder-file">
         <div class="icon"></div>
-        <input class="inputer" type="text" v-model="fileFullName" ref="inputer">
+        <input
+          key="inputer"
+          class="inputer"
+          type="text"
+          v-model="fileFullName"
+          ref="inputer"
+          value="data.name"
+          :placeholder="isFile ? 'Cancel creating file' : 'Cancel creating folder'"
+          @keyup.enter="onConfirmCreate"
+        >
       </div>
     </template>
     <template v-else>
@@ -61,16 +70,12 @@ export default {
     isDelete() {
       return this.data.status.isDelete
     },
+    isFile() {
+      return FileHelper.isFile(this.data)
+    },
     files() {
       return FileHelper.sort(this.$store.state.workspace.project.files.filter(file => file.mid === this.data.fid))
     },
-    size() {
-      const len = this.data.files.length
-
-      if (len > 10) {
-        return 'size-max'
-      }
-    }
   },
   mounted() {
     if (FileHelper.isPlaceholder(this.data)) {
@@ -95,7 +100,10 @@ export default {
           this.$store.dispatch('workspace/unfoldFile', this.data)
         },
       })
-    }
+    },
+    onConfirmCreate() {
+      this.$khala.emit('catalogue-node:createFile', this.data)
+    },
   },
   components: {
     SourceItem,
@@ -104,7 +112,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '/src/styles/colors';
+@import '/static/components-styles/colors';
 
 .placeholder-file {
   position: relative;

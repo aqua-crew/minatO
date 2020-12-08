@@ -51,6 +51,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '/static/components-styles/colors';
+
 .folder {
   transition: all .25s ease-out;
   .header {

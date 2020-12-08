@@ -13,6 +13,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '/static/components-styles/colors';
+
 .decoration-wave {
   position: relative;
   align-items: center;

@@ -118,17 +118,20 @@ export default {
     }
   },
   created() {
-    this.getWorkspace()
+    this['createFileFromEnter'] = () => {
+      this.$store.dispatch('modals/close', Modals.Workspace)
+      this.onCreateFileModalClose()
+    }
 
-    // setTimeout(() => {
-    //   console.warn('Exception Test')
-    //   this.$store.dispatch('exceptions/throw', {
-    //     code: Exceptions.SAME_FILE_ERROR,
-    //     exception: {
-    //       msg: '重复文件错误',
-    //     }
-    //   })
-    // }, 1000)
+    this.$khala.on('catalogue-node:createFile', this['createFileFromEnter'])
+
+    this['saveWorkspaceWhenPageUnload'] = () => {
+      this.user && this.$store.dispatch('workspace/saveWorkspace', this.user.uid)
+    }
+
+    this.$khala.on('pageUnload', this['saveWorkspaceWhenPageUnload'])
+
+    this.getWorkspace()
   },
   methods: {
     getWorkspace() {
@@ -143,25 +146,25 @@ export default {
         return
       }
 
-      this.$store.dispatch('workspace/requestWorkspace', this.user.uid).then(() => {
+      this.$store.dispatch('workspace/requestWorkspace', this.user.uid).then((workspace) => {
         this.requested = true
       })
     },
+    initWorkspace(workspace) {
+
+    },
     onCreateFile(mid = '0', pid = this.pid) {
-      if (!pid) {
-        return
+      if (pid === '-1') {
+        if (this.project == null) {
+          return
+        }
+
+        pid = this.project.pid
       }
 
       this.$refs.filesFilter.unfold()
 
-      this.$store.dispatch('modals/open', {
-        modal: Modals.Workspace,
-        value: {
-          mid,
-          pid,
-          type: FileEnum.FileType.File,
-        },
-      })
+      this.$store.dispatch('modals/open', Modals.Workspace)
 
       this.$store.dispatch('workspace/createPlaceholderFile', {
         pid,
@@ -170,8 +173,12 @@ export default {
       })
     },
     onCreateFolder(mid = '0', pid = this.pid) {
-      if (!pid) {
-        return
+      if (pid === '-1') {
+        if (this.project == null) {
+          return
+        }
+
+        pid = this.project.pid
       }
 
       this.$refs.filesFilter.unfold()
@@ -211,29 +218,31 @@ export default {
       }
 
       if (eventOrData.file) {
+        contextMenuType = FileHelper.isFolder(eventOrData.file) ? 'folder' : 'file'
         position = {
           top: eventOrData.y + 'px',
           left: eventOrData.x + 'px'
         }
 
-        contextMenuType = FileHelper.isFolder(eventOrData.file) ? 'folder' : 'file'
-        payload.pid = eventOrData.file.pid
-        payload.mid = eventOrData.file.fid
         payload.file = eventOrData.file
-        payload.name = eventOrData.file.name + eventOrData.file.ext
         payload.unfold = eventOrData.unfold
       } else {
+        contextMenuType = 'folder'
         position = {
           top: event.clientY + 'px',
           left: event.clientX + 'px',
         }
 
-        contextMenuType = 'folder'
-        payload.pid = this.pid
-        payload.mid = '0'
+        payload.file = {
+          pid: this.project.pid,
+          fid: '0',
+        }
         payload.unfold = () => {
           this.$refs.filesFilter.unfold()
         }
+
+        payload.noName = true
+        payload.noDelete = true
       }
 
       this.$store.dispatch('modals/open', {
@@ -246,11 +255,10 @@ export default {
     }
   },
   beforeDestroy() {
-    if (!this.user) {
-      return
-    }
+    this.$khala.off('catalogue-node:createFile', this['createFileFromEnter'])
+    this.$khala.off('pageUnload', this['saveWorkspaceWhenPageUnload'])
 
-    this.$store.dispatch('workspace/saveWorkspace', this.user.uid)
+    this.user && this.$store.dispatch('workspace/saveWorkspace', this.user.uid)
   },
   components: {
     Searcher,
@@ -267,7 +275,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '/src/styles/colors';
+@import '/static/components-styles/colors';
 
 .explorer-workspace {
   display: flex;
