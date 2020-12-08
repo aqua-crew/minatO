@@ -95,7 +95,8 @@ export default {
     align-items: center;
     width: 100%;
     .i-menu-item.active {
-      background-color: rgba($aqua, .8);
+      transition: all .25s ease-in-out;
+      background-color: rgba($button-color, 1);
       color: rgba($white, 1) !important;
     }
   }

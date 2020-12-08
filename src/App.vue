@@ -31,7 +31,9 @@
       ></activity>
     </div>
     <div class="footer">
-      <!-- Clock < -->
+      <static-icon class="i-static-icon" :type="env"></static-icon>
+      <static-icon class="i-static-icon" :type="'v' + version"></static-icon>
+      <!-- <clock> -->
     </div>
   </div>
 </template>
@@ -42,7 +44,7 @@ import Explorer from '/src/components/explorer/explorer'
 import Stage from '/src/components/stage/stage'
 import Activity from '/src/components/activity/activity'
 import ContextMenu from '/src/components/context-menu/context-menu'
-
+import StaticIcon from '/src/components/static-icon/static-icon'
 
 export default {
   data() {
@@ -51,6 +53,9 @@ export default {
       currentProject: null,
       isShowExplorer: true,
       isShowActivity: true,
+
+      env: process.env.NODE_ENV,
+      version: '0.1',
     }
   },
   created() {
@@ -88,6 +93,7 @@ export default {
     Stage,
     Activity,
     ContextMenu,
+    StaticIcon,
   }
 }
 </script>
@@ -127,9 +133,18 @@ export default {
   display: flex;
 }
 .footer {
+  font-size: 0;
   flex: 0 0 40px;
 
   background-color: rgba($main-color, .9);
+  .i-static-icon {
+    padding: 0 12px;
+    height: 100%;
+    cursor: default;
+  }
+  > .i-static-icon + .i-static-icon {
+    margin-left: 2px;
+  }
 }
 
 .explorer-fade-enter {
