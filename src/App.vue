@@ -66,6 +66,12 @@ export default {
       return 'Ayarin'
     }
 
+    document.visibilitychange = () => {
+      if (document.visibilityState !== 'visible') {
+        this.$khala.emit('pageHide')
+      }
+    }
+
     this.$global.enterTime = new Date().getTime()
 
     this.login()

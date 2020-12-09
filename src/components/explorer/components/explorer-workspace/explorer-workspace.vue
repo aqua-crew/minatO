@@ -130,6 +130,7 @@ export default {
     }
 
     this.$khala.on('pageUnload', this['saveWorkspaceWhenPageUnload'])
+    this.$khala.on('pageHide', this['saveWorkspaceWhenPageUnload'])
 
     this.getWorkspace()
   },
@@ -257,6 +258,7 @@ export default {
   beforeDestroy() {
     this.$khala.off('catalogue-node:createFile', this['createFileFromEnter'])
     this.$khala.off('pageUnload', this['saveWorkspaceWhenPageUnload'])
+    this.$khala.off('pageHide', this['saveWorkspaceWhenPageUnload'])
 
     this.user && this.$store.dispatch('workspace/saveWorkspace', this.user.uid)
   },
