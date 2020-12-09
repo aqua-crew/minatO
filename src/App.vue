@@ -26,13 +26,14 @@
 
       <stage></stage>
 
-      <activity
+      <!-- <activity
         v-show="isShowActivity"
-      ></activity>
+      ></activity> -->
     </div>
     <div class="footer">
       <static-icon class="i-static-icon" :type="env"></static-icon>
       <static-icon class="i-static-icon" :type="'v' + version"></static-icon>
+      <static-icon class="i-static-icon" type="autosave"></static-icon>
       <!-- <clock> -->
     </div>
   </div>
@@ -107,43 +108,46 @@ export default {
   flex-flow: column;
   width: 100vw;
   height: 100vh;
-}
-.header {
-  flex: 0 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-
-  background-color: rgba($main-color, .85);
-  .app-sign {
+  .global-components {
+    position: absolute;
+  }
+  .header {
+    flex: 0 0 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 12px;
-    .name {
-      color: rgba(118, 218, 255, 1);
-      font-size: 13px;
-      font-weight: bold;
+    user-select: none;
+    background-color: rgba($main-color, .85);
+    .app-sign {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 12px;
+      .name {
+        color: rgba(118, 218, 255, 1);
+        font-size: 13px;
+        font-weight: bold;
+      }
     }
   }
-}
-.body {
-  flex: 1;
-  display: flex;
-}
-.footer {
-  font-size: 0;
-  flex: 0 0 40px;
-
-  background-color: rgba($main-color, .9);
-  .i-static-icon {
-    padding: 0 12px;
-    height: 100%;
-    cursor: default;
+  .body {
+    flex: 1;
+    display: flex;
   }
-  > .i-static-icon + .i-static-icon {
-    margin-left: 2px;
+  .footer {
+    display: flex;
+    flex: 0 0 40px;
+    font-size: 0;
+
+    background-color: rgba($main-color, .9);
+    .i-static-icon {
+      padding: 0 12px;
+      height: 100%;
+      cursor: default;
+    }
+    > .i-static-icon + .i-static-icon {
+      margin-left: 2px;
+    }
   }
 }
 
@@ -164,9 +168,5 @@ export default {
 }
 .explorer-fade-leave-to {
   width: 0;
-}
-
-.global-components {
-  position: absolute;
 }
 </style>

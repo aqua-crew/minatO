@@ -33,8 +33,8 @@
           ref="filesFilter"
         >
           <template #menu>
-            <icon class="i-icon" type="addFile" @click.native.stop="onCreateFile()"></icon>
-            <icon class="i-icon" type="addFolder" @click.native.stop="onCreateFolder()"></icon>
+            <icon class="i-icon" type="createFile" @click.native.stop="onCreateFile()"></icon>
+            <icon class="i-icon" type="createFolder" @click.native.stop="onCreateFolder()"></icon>
           </template>
           <template #catalogue>
             <catalogue

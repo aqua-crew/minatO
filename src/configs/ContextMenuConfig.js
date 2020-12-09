@@ -11,8 +11,6 @@ const contextmenu = {
     const $store = payload.$store
     const file = payload.file
 
-    console.warn('file', file)
-
     return [
       {
         name: FileHelper.getFullName(file),
@@ -43,12 +41,6 @@ const contextmenu = {
             mid: file.fid,
             type: FileEnum.FileType.File,
           })
-        },
-      },
-      {
-        name: 'Test',
-        fn() {
-
         },
       },
       {

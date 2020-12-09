@@ -6,6 +6,13 @@
         <div class="bg">404</div>
         <div class="fore">work-in-progress</div>
       </div>
+      <div class="guide">
+        <span class="title">GUIDE:</span>
+        <ul class="guide-list">
+          <li>> Projects -> Add (create demo-project)</li>
+          <li>> Enter Project -> Workspace -> Create File Or Folder</li>
+        </ul>
+      </div>
     </div>
     <div class="quotation right-quotation">”</div>
   </div>
@@ -36,8 +43,8 @@ export default {
   flex: 1;
   background-color: rgba($main-color, 1);
   position: relative;
-  vertical-align: middle;
   text-align: center;
+  font-size: 0;
   overflow: hidden;
   user-select: none;
   &::after {
@@ -47,7 +54,6 @@ export default {
     width: 0;
     vertical-align: middle;
   }
-
   .quotation {
     position: absolute;
     display: flex;
@@ -80,6 +86,7 @@ export default {
   .info {
     position: relative;
     display: flex;
+    flex-flow: column;
     justify-content: center;
     font-size: 200px;
     .bg {
@@ -89,11 +96,29 @@ export default {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 104px;
+      top: 100px;
       white-space: pre;
       background-color: rgba($main-color, 1);
       color: rgba($font-color, 1);
       font-size: 14px;
+    }
+  }
+  .guide {
+    position: absolute;
+    margin-top: -16px;
+    margin-left: 3px;
+    text-align: left;
+    color: rgba($font-color, 1);
+    .title {
+      font-size: 13px;
+      font-weight: bold;
+    }
+    .guide-list {
+      margin-top: 4px;
+      font-size: 12px;
+      > li {
+        line-height: 16px;
+      }
     }
   }
 }
