@@ -1,4 +1,13 @@
 .aqua {
+  .suffix code {
+    .aqua-block-indent {
+      display: inline-block;
+      border-left: 1px solid rgba(118, 218, 255, .15);
+    }
+  }
+}
+
+.aqua {
   display: flex;
   position: relative;
   height: 100%;

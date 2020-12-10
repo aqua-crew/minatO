@@ -273,7 +273,6 @@ export default {
     CreateFileModal,
   },
 }
-
 </script>
 
 <style lang="scss">
