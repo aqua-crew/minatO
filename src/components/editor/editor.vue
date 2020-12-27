@@ -58,6 +58,7 @@ export default {
 
       const load_ = (content) => {
         this.aqua.rebuild(content)
+        this.aqua.inputer.focus() // 保证切换后的输入法能够直接起作用
       }
 
       load_(content)

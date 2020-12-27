@@ -48,7 +48,9 @@
       </div>
     </template>
 
-    <create-file-modal v-show="createFileModal" @onClose="onCreateFileModalClose"></create-file-modal>
+    <animation-fade>
+      <create-file-modal v-show="createFileModal" @onClose="onCreateFileModalClose"></create-file-modal>
+    </animation-fade>
   </div>
 </template>
 
@@ -58,6 +60,7 @@ import ProjectPlane from '/src/components/project-plane/project-plane'
 import Catalogue from '/src/components/catalogue/catalogue'
 import Icon from '/src/components/icon/icon'
 import StaticIcon from '/src/components/static-icon/static-icon'
+import AnimationFade from '/src/components/animations/animation-fade'
 
 import CreateFileModal from './components/create-file-modal/create-file-modal'
 import FileFilter from './components/file-filter/file-filter'
@@ -212,6 +215,10 @@ export default {
       this.$store.dispatch('workspace/openFile', file)
     },
     onContextMenu(eventOrData) {
+      if (this.createFileModal) {
+        return
+      }
+
       let position = null
       let contextMenuType = ''
       const payload = {
@@ -268,6 +275,7 @@ export default {
     Catalogue,
     Icon,
     StaticIcon,
+    AnimationFade,
 
     FileFilter,
     CreateFileModal,

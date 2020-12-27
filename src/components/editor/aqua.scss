@@ -1,8 +1,17 @@
 .aqua {
   .suffix code {
     .aqua-block-indent {
+      position: relative;
       display: inline-block;
       border-left: 1px solid rgba(118, 218, 255, .15);
+      margin-left: -1px;
+      // &::before {
+      //   content: '';
+      //   position: absolute;
+      //   top: 0;
+      //   bottom: 0;
+      //   border-left: 1px solid rgba(118, 218, 255, .15);
+      // }
     }
   }
 }
@@ -175,6 +184,7 @@
     .line-num {
       color: rgba(118, 218, 255, .5);
       width: var(--line-width);
+      min-width: 21px;
     }
   }
   .suffix {

@@ -160,7 +160,7 @@ export default {
 
   &:hover {
     > .content {
-      border-left: 1px solid rgba($font-color, .9) !important;
+      border-color: rgba($font-color, .9) !important;
     }
   }
   .content {
